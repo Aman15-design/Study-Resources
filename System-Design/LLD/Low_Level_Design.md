@@ -201,3 +201,268 @@ public class ObserverExample {
 ### Real-Life Examples:
 - **Social Media Notifications**: You follow a page, and whenever the page posts something, you’re notified.
 - **YouTube Subscriptions**: You subscribe to a channel, and whenever a new video is uploaded, you’re notified.
+
+
+## Builder Design Pattern
+
+Builder design patterns allow us to create a complex object step by step. That is, suppose you have a very complex object wherein we have an ‘n’ number of fields. One way to create that object is to know all these `n` number of fields and write them while declaring that object in the given order, which could be very difficult when we have hundreds of variables.
+
+The builder pattern removes this complexity by allowing us to build the object step by step.
+
+### Example: Building a House
+
+#### Without Builder Pattern
+We might end up with messy constructors with too many arguments, like this:
+
+```java
+class House {
+    private String roof;
+    private String walls;
+    private String windows;
+
+    public House(String roof, String walls, String windows) {
+        this.roof = roof;
+        this.walls = walls;
+        this.windows = windows;
+    }
+}
+
+// Creating a house
+House house = new House("Red Roof", "Brick Walls", "Glass Windows");
+```
+
+Now there are only three variables in this example, so it's not difficult. However, if there are too many optional or complex parts, it becomes hard to manage.
+
+#### With Builder Pattern
+Here's a cleaner approach:
+
+```java
+// Product class
+class House {
+    private String roof;
+    private String walls;
+    private String windows;
+
+    // Private constructor
+    private House(Builder builder) {
+        this.roof = builder.roof;
+        this.walls = builder.walls;
+        this.windows = builder.windows;
+    }
+
+    // Builder Class
+    public static class Builder {
+        private String roof;
+        private String walls;
+        private String windows;
+
+        public Builder setRoof(String roof) {
+            this.roof = roof;
+            return this;
+        }
+
+        public Builder setWalls(String walls) {
+            this.walls = walls;
+            return this;
+        }
+
+        public Builder setWindows(String windows) {
+            this.windows = windows;
+            return this;
+        }
+
+        public House build() {
+            return new House(this);
+        }
+    }
+}
+
+// Using the builder to construct a house
+House house = new House.Builder()
+                  .setRoof("Red Roof")
+                  .setWalls("Brick Walls")
+                  .setWindows("Glass Windows")
+                  .build();
+```
+
+### Benefits of the Builder Pattern
+- **Readable and Maintainable**: No messy constructors with lots of parameters.
+- **Step-by-Step Construction**: Build an object gradually, adding only the parts you need.
+- **Customizable**: Easily create variations of the same object.
+
+### When to Use the Builder Pattern
+- When you have a complex object with many optional parts or parameters.
+- When you want to construct an object step-by-step in a controlled manner.
+- When you want the object-building process to be reusable and flexible.
+
+---
+
+## Proxy Design Pattern
+
+The **Proxy Design Pattern** is a **structural design pattern** that provides a placeholder or substitute for another object. It allows you to control access to the original object, add extra functionality, or delay its creation until it's actually needed.
+
+### Think of It Like This:
+Imagine you’re a celebrity, and fans want to talk to you all the time. You can’t attend to everyone personally, so you hire a manager (**proxy**). The manager:
+- Controls who can actually meet you (**access control**).
+- Handles basic questions on your behalf (**adds functionality**).
+- Lets you relax until an important fan or interviewer needs your attention (**delays interaction**).
+
+The **manager (proxy)** acts as an intermediary, protecting and managing access to you (the real object).
+
+### Why Use a Proxy?
+- To control access to the real object.
+- To enhance functionality without modifying the original object.
+- To defer resource-heavy operations (e.g., creating a large object) until they’re actually needed.
+
+### Benefits of Proxy Pattern
+- **Access Control**: Restrict or manage access to sensitive resources.
+- **Lazy Initialization**: Delay creation or resource-intensive operations until absolutely necessary.
+- **Additional Features**: Add features like logging, caching, or validation without changing the original object.
+
+### When to Use the Proxy Pattern
+- When you want to control access to a resource (e.g., authentication).
+- When you want to defer heavy resource creation until it's needed.
+- When you want to add functionality transparently to an existing class without modifying it.
+
+In short: **Proxy Pattern** is like a middleman that manages or enhances interactions with the real object!
+
+---
+
+## Adapter Design Pattern
+
+The **Adapter Design Pattern** is a **structural design pattern** that allows two incompatible interfaces to work together. It acts as a bridge between two systems or classes that otherwise couldn’t interact directly because they have different interfaces.
+
+### Think of It Like This:
+Imagine you bought a new phone, but its charger has a USB-C port, while all your old cables are micro-USB. To solve this, you use a **USB-C to Micro-USB adapter**:
+- The phone expects a USB-C connection.
+- The old cable uses a Micro-USB connector.
+- The adapter allows them to work together by converting Micro-USB to USB-C.
+
+The **adapter** makes it possible for the old cable (incompatible) to connect to the new phone.
+
+### Why Use the Adapter Pattern?
+- To make incompatible interfaces work together without modifying them.
+- To reuse existing code or classes in a new context.
+- To avoid tightly coupling systems, making the code more flexible.
+
+### Key Components
+1. **Target Interface**: The interface the client expects.
+2. **Adaptee**: The existing class with an incompatible interface.
+3. **Adapter**: The bridge that converts the Adaptee's interface to the Target Interface.
+
+### Example: Charging iPhone 13 with an Android Charger
+
+#### Step 1: Define the Target Interface
+The interface the iPhone expects to use:
+
+```java
+// Target interface
+interface LightningPort {
+    void chargeWithLightning();
+}
+```
+
+#### Step 2: Existing Class (Adaptee)
+The Android charger uses USB-C:
+
+```java
+// Adaptee class
+class AndroidCharger {
+    public void chargeWithUsbC() {
+        System.out.println("Charging using USB-C...");
+    }
+}
+```
+
+#### Step 3: Create the Adapter
+The adapter converts the USB-C interface into a Lightning interface:
+
+```java
+// Adapter class
+class LightningToUsbCAdapter implements LightningPort {
+    private AndroidCharger androidCharger;
+
+    public LightningToUsbCAdapter(AndroidCharger androidCharger) {
+        this.androidCharger = androidCharger;
+    }
+
+    @Override
+    public void chargeWithLightning() {
+        System.out.println("Adapter converts Lightning to USB-C...");
+        androidCharger.chargeWithUsbC();
+    }
+}
+```
+
+#### Step 4: Client Code
+Use the adapter to charge the iPhone with the Android charger:
+
+```java
+// Client code
+public class Main {
+    public static void main(String[] args) {
+        // Android charger
+        AndroidCharger androidCharger = new AndroidCharger();
+
+        // Adapter to charge iPhone
+        LightningPort adapter = new LightningToUsbCAdapter(androidCharger);
+
+        // Charging iPhone 13
+        System.out.println("Charging iPhone 13 with Android charger:");
+        adapter.chargeWithLightning();
+    }
+}
+```
+
+### Output
+```plaintext
+Charging iPhone 13 with Android charger:
+Adapter converts Lightning to USB-C...
+Charging using USB-C…
+```
+
+---
+
+## Facade Design Pattern
+
+The **Facade Design Pattern** is a **structural design pattern** that provides a simplified interface to a complex subsystem or a group of related classes. It acts as a **front door** that hides the complexities of the system and makes it easier for clients to interact with it.
+
+### Think of It Like This:
+Imagine you’re at a restaurant:
+- Instead of directly talking to the chef, the cashier, and the server, you just place your order with the **waiter** (facade).
+- The waiter handles all the behind-the-scenes interactions with the kitchen and billing system and simply delivers your food.
+
+The **waiter** provides a single, simple interface to interact with the complex operations of the restaurant.
+
+### Key Features of the Facade Pattern
+- **Simplifies Usage**: Hides the complexity of the subsystem.
+- **Unified Interface**: Offers a single entry point to interact with multiple components.
+- **Improves Maintainability**: Changes to subsystem components are isolated from the client.
+
+### When to Use the Facade Pattern
+- When you want to simplify the usage of a complex system.
+- When you need to decouple the client from the underlying subsystem.
+- When working with legacy systems, making them easier to use without changing the core.
+
+### Benefits
+- **Reduces Complexity**: Simplifies the interface for the client.
+- **Decouples Client and Subsystem**: Makes the system easier to extend or modify.
+- **Improves Readability**: Provides a clean and clear interface for interacting with the system.
+
+### Code Example
+
+#### Step 1: Subsystems (Complex Components)
+These are the individual components that need to work together:
+
+```java
+// Subsystem: TV
+class TV {
+    public void turnOn() {
+        System.out.println("Turning on the TV...");
+    }
+}
+
+// Subsystem: Sound System
+class SoundSystem {
+    public void turnOn() {
+        System.out.println("Turning on the sound system...");
