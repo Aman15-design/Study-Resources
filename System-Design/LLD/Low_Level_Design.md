@@ -1,7 +1,18 @@
 
 # Low Level Design
 
-## Singleton Method Design Pattern
+## Index
+
+1. [Singleton Method Design Pattern](#singleton-method-design-pattern)
+2. [Factory Method Pattern](#factory-method-pattern)
+3. [Abstract Factory Pattern](#abstract-factory-pattern)
+4. [Observer Design Pattern](#observer-design-pattern)
+5. [Builder Design Pattern](#builder-design-pattern)
+6. [Proxy Design Pattern](#proxy-design-pattern)
+7. [Adapter Design Pattern](#adapter-design-pattern)
+8. [Facade Design Pattern](#facade-design-pattern)
+   
+# Singleton Method Design Pattern
 
 The Singleton design pattern ensures that the class has only one single instance and provides global access to that instance. There are multiple use cases for the Singleton class, and one of them is thread safety.
 
@@ -39,7 +50,7 @@ The Singleton design pattern ensures that the class has only one single instance
 
 ---
 
-## Factory Method Pattern
+# Factory Method Pattern
 
 The Factory Method Pattern delegates the task of object creation to subclasses or child classes, allowing for greater scalability. The superclass provides an interface for creating objects, while the subclass can decide the type of object to be created.
 
@@ -73,7 +84,7 @@ In the example above, the subclasses are able to alter the objects based on requ
 
 ---
 
-## Abstract Factory Pattern
+# Abstract Factory Pattern
 
 The Abstract Factory Pattern provides an additional layer of abstraction above the Factory Pattern, focusing on groups of related products.
 
@@ -112,7 +123,7 @@ In the above example, the `Vehicle` and `Speed` interfaces implement the Factory
 
 ---
 
-## Observer Design Pattern
+# Observer Design Pattern
 
 The Observer Design Pattern is a behavioral pattern that defines a one-to-many dependency between objects. When the subject (one object) changes state, all its dependents (observers) are notified and updated automatically.
 
@@ -203,7 +214,7 @@ public class ObserverExample {
 - **YouTube Subscriptions**: You subscribe to a channel, and whenever a new video is uploaded, you’re notified.
 
 
-## Builder Design Pattern
+# Builder Design Pattern
 
 Builder design patterns allow us to create a complex object step by step. That is, suppose you have a very complex object wherein we have an ‘n’ number of fields. One way to create that object is to know all these `n` number of fields and write them while declaring that object in the given order, which could be very difficult when we have hundreds of variables.
 
@@ -297,7 +308,7 @@ House house = new House.Builder()
 
 ---
 
-## Proxy Design Pattern
+# Proxy Design Pattern
 
 The **Proxy Design Pattern** is a **structural design pattern** that provides a placeholder or substitute for another object. It allows you to control access to the original object, add extra functionality, or delay its creation until it's actually needed.
 
@@ -328,7 +339,7 @@ In short: **Proxy Pattern** is like a middleman that manages or enhances interac
 
 ---
 
-## Adapter Design Pattern
+# Adapter Design Pattern
 
 The **Adapter Design Pattern** is a **structural design pattern** that allows two incompatible interfaces to work together. It acts as a bridge between two systems or classes that otherwise couldn’t interact directly because they have different interfaces.
 
@@ -423,7 +434,7 @@ Charging using USB-C…
 
 ---
 
-## Facade Design Pattern
+# Facade Design Pattern
 
 The **Facade Design Pattern** is a **structural design pattern** that provides a simplified interface to a complex subsystem or a group of related classes. It acts as a **front door** that hides the complexities of the system and makes it easier for clients to interact with it.
 
@@ -449,9 +460,13 @@ The **waiter** provides a single, simple interface to interact with the complex 
 - **Decouples Client and Subsystem**: Makes the system easier to extend or modify.
 - **Improves Readability**: Provides a clean and clear interface for interacting with the system.
 
-### Code Example
 
-#### Step 1: Subsystems (Complex Components)
+# Home Theater Facade Pattern Example
+
+This example demonstrates the **Facade Design Pattern** in Java. The Facade pattern provides a simplified interface to a complex system, making it easier for the client to interact with the subsystem.
+
+## Step 1: Subsystems (Complex Components)
+
 These are the individual components that need to work together:
 
 ```java
@@ -466,3 +481,71 @@ class TV {
 class SoundSystem {
     public void turnOn() {
         System.out.println("Turning on the sound system...");
+    }
+}
+
+// Subsystem: Streaming Service
+class StreamingService {
+    public void openApp(String app) {
+        System.out.println("Opening " + app + " app...");
+    }
+}
+```
+
+## Step 2: Facade Class
+
+This class simplifies interactions with the subsystems:
+
+```java
+// Facade
+class HomeTheaterFacade {
+    private TV tv;
+    private SoundSystem soundSystem;
+    private StreamingService streamingService;
+
+    public HomeTheaterFacade() {
+        this.tv = new TV();
+        this.soundSystem = new SoundSystem();
+        this.streamingService = new StreamingService();
+    }
+
+    public void watchMovie(String app) {
+        System.out.println("Preparing to watch a movie...");
+        tv.turnOn();
+        soundSystem.turnOn();
+        streamingService.openApp(app);
+        System.out.println("Enjoy your movie!");
+    }
+}
+```
+
+## Step 3: Client Code
+
+The client interacts only with the Facade:
+
+```java
+// Client
+public class Main {
+    public static void main(String[] args) {
+        // Facade simplifies the process
+        HomeTheaterFacade homeTheater = new HomeTheaterFacade();
+        homeTheater.watchMovie("Netflix");
+    }
+}
+```
+
+## Output
+
+```
+Preparing to watch a movie...
+Turning on the TV...
+Turning on the sound system...
+Opening Netflix app...
+Enjoy your movie!
+```
+
+## Explanation
+
+- **Subsystems (TV, SoundSystem, StreamingService):** Each class handles its own specific task.
+- **Facade (HomeTheaterFacade):** Simplifies the process by grouping multiple steps into a single `watchMovie()` method.
+- **Client:** Interacts only with the Facade, without worrying about the complexity of the subsystems.
