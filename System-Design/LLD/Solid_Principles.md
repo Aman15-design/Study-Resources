@@ -328,7 +328,7 @@ public class Main {
 
 ## 5. Dependency Inversion Principle (DIP)
 
-High-level modules should not depend on low-level modules; both should depend on abstractions.
+High-level modules should not depend on low-level modules; both should depend on abstractions. Classes should on interfaces rahter than concrete classes.
 
 ### Example Without DIP
 
